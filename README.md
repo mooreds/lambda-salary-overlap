@@ -1,3 +1,5 @@
+# Salary overlap tool
+
 This is the display and logic of a project to allow two parties to share their salary expectations without revealing their exact numbers. 
 
 Each party fills out a form with the numbers and gets a results page that will display a green or red bar based on whether there is overlap.
@@ -17,3 +19,7 @@ There are three lambda functions:
 The lambda functions are hosted at public URLs and update a dynamodb table.
 
 This was written with the help of ChatGPT.
+
+## TODO
+
+Add logic to swap salary min and max if someone enters a bigger number in the min field.

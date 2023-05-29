@@ -32,6 +32,16 @@
       justify-content: center;
     }
 
+    .min-overlap {
+      width: 100%;
+      height: 50px;
+      background-color: yellow;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .not-valid {
       width: 100%;
       height: 50px;
@@ -59,14 +69,16 @@
     xhr.onload = function() {
       if (xhr.status === 200) {
         const response = JSON.parse(xhr.responseText);
-        const isOverlap = response.isOverlap;
+        const overlap = response.overlap;
         const isValid = response.isValid;
 
         // Display the overlap status on the page
 	if (!isValid) {
           document.getElementById("overlapStatus").innerHTML = '<div class="not-valid">Both ranges have not been entered!</div>';
-	} else if (isOverlap) {
+	} else if (overlap >= 25) {
           document.getElementById("overlapStatus").innerHTML = '<div class="overlap">Salary ranges overlap!</div>';
+	} else if (overlap < 25 && overlap > 0) {
+          document.getElementById("overlapStatus").innerHTML = '<div class="min-overlap">Salary ranges overlap, but not by much.</div>';
         } else {
           document.getElementById("overlapStatus").innerHTML = '<div class="no-overlap">Salary ranges do not overlap!</div>';
         }

@@ -16,12 +16,12 @@ export const handler = async (event) => {
     const isValid = user1Range && user2Range;
 
     // Determine if there is an overlap between the ranges
-    const isOverlap = isValid && checkRangeOverlap(user1Range, user2Range);
+    const overlap = checkRangeOverlap(user1Range, user2Range);
 
     // Prepare the response
     const response = {
       statusCode: 200,
-      body: JSON.stringify({ isOverlap: isOverlap, isValid: isValid })
+      body: JSON.stringify({ overlap: overlap, isValid: isValid })
     };
 
     return response;
@@ -54,14 +54,6 @@ function checkRangeOverlap(range1, range2) {
   // Implement your own logic to determine if there is an overlap
   // between range1 and range2. For example, you can compare the
   // minimum and maximum values of the ranges.
-  console.log("1 min")
-  console.log(range1.salaryMin.N);
-  console.log("2 min")
-  console.log(range2.salaryMin.N);
-  console.log("1 max")
-  console.log(range1.salaryMax.N);
-  console.log("2 max")
-  console.log(range2.salaryMax.N);
 
   return checkOverlap(
     parseInt(range1.salaryMin.N), parseInt(range1.salaryMax.N), 
@@ -72,10 +64,21 @@ function checkRangeOverlap(range1, range2) {
 
 
 function checkOverlap(x, y, a, b) {
-  // Check if x is between a and b or y is between a and b
-  if ((x >= a && x <= b) || (y >= a && y <= b)) {
-    return true; // Overlap exists
+
+  if (x > b || y < a) {
+    // No overlap
+    return 0;
   }
 
-  return false; // No overlap
+  const overlapStart = Math.max(x, a);
+  const overlapEnd = Math.min(y, b);
+  const overlapSize = overlapEnd - overlapStart;
+  const range1Size = y - x;
+  const range2Size = b - a;
+
+  // Calculate the percentage of overlap
+  const overlapPercentage = (overlapSize / Math.min(range1Size, range2Size)) * 100;
+
+  return overlapPercentage;
+
 }

@@ -15,3 +15,5 @@ There are three lambda functions:
 * overlap.js to display a result
 
 The lambda functions are hosted at public URLs and update a dynamodb table.
+
+This was written with the help of ChatGPT.

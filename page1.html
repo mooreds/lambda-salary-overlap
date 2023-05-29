@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salary Range Entry</title>
+</head>
+<body>
+  <h1>Salary Range Entry</h1>
+  <p>This tool lets you share salary expectations with both parties keeping the precise numbers secret. If each party fills out the form, the results page will show green if there is overlap and red if there is not.</p>
+
+  <span id="info"></span>
+
+  <form id="salaryForm">
+    <label for="salaryMin">Minimum Salary:</label>
+    <input type="number" id="salaryMin" name="salaryMin" required>
+
+    <label for="salaryMax">Maximum Salary:</label>
+    <input type="number" id="salaryMax" name="salaryMax" required>
+
+    <label for="jobDescription">Job Description:</label>
+    <textarea id="jobDescription" name="jobDescription"></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p>Share this link with the other part to enter their desired salary range:</p>
+  <span id="user2Link"></span>
+
+  <p>After they fill it out, results will be at:</p>
+  <span id="resultLink"></span>
+
+  <script>
+    // Add event listener to the form submission
+    document.getElementById("salaryForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent the form from submitting traditionally
+
+      // Retrieve the form data
+      const salaryMin = document.getElementById("salaryMin").value;
+      const salaryMax = document.getElementById("salaryMax").value;
+      const jobDescription = document.getElementById("jobDescription").value;
+
+      // Create a payload object to send to the server
+      const payload = {
+        salaryMin: parseInt(salaryMin),
+        salaryMax: parseInt(salaryMax),
+        jobDescription: jobDescription
+      };
+
+      // Make an AJAX request to the Lambda function to store the salary range
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://sg4yafb26pytbj3t2evfavjb6i0intty.lambda-url.us-east-2.on.aws/");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // Success! Handle any further actions or redirect the user
+          document.getElementById("info").innerText = "Salary range submitted successfully!";
+          const responseData = JSON.parse(xhr.responseText);
+          document.getElementById("user2Link").innerText = responseData.user2Link; // Populate the link for User 2
+          document.getElementById("resultLink").innerText = responseData.resultLink; 
+        } else {
+          // Handle errors if necessary
+          document.getElementById("info").text = "Failed to submit salary range. Please try again.";
+        }
+      };
+      xhr.send(JSON.stringify(payload));
+    });
+  </script>
+</body>
+</html>
+

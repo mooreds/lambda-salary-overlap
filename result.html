@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Range Overlap Page</title>
+  <style>
+    .overlap {
+      width: 100%;
+      height: 50px;
+      background-color: green;
+    }
+    
+    .no-overlap {
+      width: 100%;
+      height: 50px;
+      background-color: red;
+    }
+
+    .not-valid {
+      width: 100%;
+      height: 50px;
+      background-color: orange;
+    }
+  </style>
+</head>
+<body>
+  <h1>Range Overlap Page</h1>
+
+  <div id="overlapStatus"></div>
+
+  <script>
+    // Retrieve the rangeId from the URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const rangeId = urlParams.get('rangeId');
+
+    // Make an AJAX request to the Lambda function to check the overlap status
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `https://mwdwhssdgmroxwj443heljx7e40liufz.lambda-url.us-east-2.on.aws/?rangeId=${rangeId}`);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        const isOverlap = response.isOverlap;
+        const isValid = response.isValid;
+
+        // Display the overlap status on the page
+	if (!isValid) {
+          document.getElementById("overlapStatus").innerHTML = '<div class="not-valid">Both ranges have not been entered!</div>';
+	} else if (isOverlap) {
+          document.getElementById("overlapStatus").innerHTML = '<div class="overlap">Salary ranges overlap!</div>';
+        } else {
+          document.getElementById("overlapStatus").innerHTML = '<div class="no-overlap">Salary ranges do not overlap!</div>';
+        }
+      } else {
+        // Handle errors if necessary
+        alert("Failed to check range overlap. Please try again.");
+      }
+    };
+    xhr.send();
+  </script>
+</body>
+</html>
+

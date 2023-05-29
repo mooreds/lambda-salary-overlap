@@ -6,7 +6,7 @@ const dynamodb = new DynamoDBClient({ region: "us-east-2" });
 export const handler = async (event) => {
   try {
     // Retrieve the salary range and job description from the request body
-    const { salaryMin, salaryMax, jobDescription } = JSON.parse(event.body);
+    const { salaryMin, salaryMax } = JSON.parse(event.body);
 
     // Generate a unique identifier for the salary range
     const rangeId = generateUniqueRangeId();
@@ -18,8 +18,7 @@ export const handler = async (event) => {
         rangeid: { S: rangeId },
         stage: { N: "1" },
         salaryMin: { N: salaryMin.toString() },
-        salaryMax: { N: salaryMax.toString() },
-        jobDescription: { S: jobDescription }
+        salaryMax: { N: salaryMax.toString() }
       }
     }));
 
